@@ -269,3 +269,83 @@ def boom(n):
         yield num
         num+=1
 print(sum(boom(10)))
+
+#Decorater  ==============================
+def sides(func):
+    def wrapper(*args,**kwargs):
+        print("haha")
+        result=func(*args,**kwargs)
+        print("haha")
+        return result
+    return wrapper
+@sides
+def add6(x):
+    return x+6
+result=add6(14)
+print(result)
+
+import functools
+def my_dec(func):
+    @functools.wraps(func)
+    def wrapp(*args,**kwargs):
+        print("Hi")
+        final=func(*args,**kwargs)
+        print("Bye")
+        return final
+    return wrapp
+@my_dec
+def mul4(x):
+      return x*4
+final=mul4(3)
+print(final)
+
+#nestedDecorator
+
+import functools
+def looper(ntimes):
+    def declooper(func):
+        @functools.wraps(func)
+        def wrapp(*args, **kwargs):
+            for _ in range(ntimes):
+                result=func(*args,**kwargs)
+            return result
+        return wrapp
+    return declooper
+@looper(ntimes=7)
+def greet(name):
+    print(f'Hi {name}')
+greet('Arvind')
+
+#classDecorator
+class CountCalls:
+    def __init__(self,func):
+        self.func= func
+        self.ncalls= 0
+    def __call__(self,*args,**kwargs):
+        self.ncalls +=1
+        print(f'This is executed {self.ncalls} times')
+        return self.func(*args,**kwargs)
+@CountCalls
+def say_hello():
+    print('hello')
+say_hello()
+say_hello()
+say_hello()
+say_hello()
+
+class CountCalls:
+    def __init__(self,func):
+        self.func=func
+        self.ncalls=0
+    def __call__(self,*args,**kwargs):
+        self.ncalls+=1
+        print(f'Done {self.ncalls} times')
+        return self.func(*args,**kwargs)
+@CountCalls
+def say_hi():
+    print("Hi")
+
+say_hi()
+say_hi()
+say_hi()
+say_hi()
