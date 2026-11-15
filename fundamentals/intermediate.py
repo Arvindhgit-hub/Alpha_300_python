@@ -200,4 +200,72 @@ class UserEncoder(JSONEncoder):
 userJSON = json.dumps(user,default=encode_user)
 print(userJSON)    
 
-    
+def cover(func):
+    def wrapper():
+        print("Hi")
+        func()
+        print("Bye")
+    return wrapper
+@cover
+def name():
+    print("aji")
+name()
+
+def add(func):
+    def wrapper(*args,**kwargs):
+        print("HI")
+        result=func(*args,**kwargs)
+        return result
+    return wrapper
+@add
+def add10(x):
+    return x+10
+print(add10(32))
+
+import functools
+def repeat(ntimes):
+    def repeater(func):
+        @functools.wraps(func)
+        def wrapper(*args,**kwargs):
+            for _ in range(ntimes):
+                result=func(*args,**kwargs)
+            return result
+        return wrapper
+    return repeater
+@cover
+@repeat(ntimes=3)
+def error():
+    print("404error")
+
+error()
+
+
+
+class counter:
+    def __init__(self,func):
+        self.func=func
+        self.calling=0
+    def __call__(self,*args,**kwargs):
+        self.calling+=1
+        print(f"Executed {self.calling} times")
+        return self.func(*args,**kwargs)
+@counter
+def dance():
+    print("dancing")
+dance()
+dance()
+
+
+def mygenerator():
+    yield 3
+    yield 2
+    yield 1
+g=mygenerator()
+print(sorted(g))
+
+def boom(n):
+    num=0
+    while num<n:
+        yield num
+        num+=1
+print(sum(boom(10)))
